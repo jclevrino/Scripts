@@ -4,8 +4,8 @@
 ## Dias a guardar 30 - Un archivo de log por día (para rastreo de fallas o problemas. Valor sugerido por el implementador)
 ## Dias sin comprimir 3 -  Un archivo de log por día(Para deteccion/resolucion rapida de incidencia)
 ## Para la compresion se utiliza la utilidad free 7zip
-## El script genera un log el cual se guarda C:\scripts\logs. Si la carpeta no existe el script la crea. Los logs del script son autodepurados
-## por el mismo script.
+## El script genera un log el cual se guarda C:\scripts\logs. Si la carpeta no existe el script la crea.
+## Los logs del script son autodepurados por el mismo script.
 
 $7z = "C:\Program Files\7-Zip\7z.exe" 
 $hoy = (Get-Date).date
@@ -67,7 +67,7 @@ if (![string]::IsNullOrEmpty($scrlogfiles))
       }
 	}
 ## Procesar los logs en los directorios listados en $dirslog
-$loggin = "============================================================================================================================================`r`n"
+$loggin = "==========================================================================================================================`r`n"
 $loggin += (StampTime) + ("Iniciando la compresion/rotacion de logs de ENGAGE")
 $loggin | Out-File -FilePath $scriptlog -Append
 ## Remover logs antiguos comprimidos
