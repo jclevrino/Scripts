@@ -20,7 +20,7 @@ $ chmod 700 backup_linux.sh
 $ sudo ./backup_linux.sh
 
 # Automatizar con cron
-# Agendar el backup diariamente a las 2:00 AM con crontab, por ejemplo.
+# Programar el backup diariamente a las 2:00 AM con crontab, por ejemplo.
 
 $ sudo crontab -e
 # Añadir esta línea:
