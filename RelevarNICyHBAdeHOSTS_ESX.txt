@@ -1,0 +1,42 @@
+#######################################################################################################################
+### Este script hace un relevamiento de las distintas NICs y HBA en Hosts ESXI de un VCenter al cual se debe conectar #
+### con un usuario que tenga los privilegios suficientes                                                              #
+#######################################################################################################################
+
+# Connect-VIServer $VC ## Conectar al VCenter que corresponda
+ 
+### Leer los hosts ESXi en los que se quiere hacer el relevamiento
+### Se puede generar un archivo con los nombres de los hosts, para lo cual se descomentará la linea 1. En caso de listarlos
+### directamente en el script se descomentará la linea 2
+# 1
+# $esxhosts = get-content C:\scripts\hostname.txt ## Leer un archivo con los HOST a relevar
+# 2
+# $esxhosts = "dc1_ESX01.dominio.int","dc1_ESX02.dominio.int" ## Listar manualmente los hosts
+
+foreach ($esx in $esxhosts)
+{
+
+  $esxcli = Get-EsxCli -VMHost $esx
+
+  $esxcli.Storage.san.fc.list.Invoke()|select @{N='HostName';E={$esxcli.VMHost.Name}}, Adapter,DriverName,DriverVersion,FirmwareVersion,hardwareVersion,PortState # |export-csv -path C:\Scripts\HBA-DriverFW.csv
+
+  $Nics =$esxcli.network.nic.list()
+
+  foreach ($nic in $Nics)
+     {
+
+      $Nicinfo = $Esxcli.network.nic.get($nic.name).driverinfo
+
+      $Nicinfo | Select @{N="HostName";E={$esxcli.VMHost.Name}},
+
+                                @{N="NICName";E={$nic.Name}},
+
+                                @{N="NICDriver";E={$NicInfo.Driver}},
+
+                                @{n="NICDriver-Version";E={$NicInfo.Version}},
+
+                                @{N="NICFirmware-Version";E={$NicInfo.FirmWareVersion}} ### si se desea salida en un archivo borrar este comentario |Export-Csv -Path C:\Scripts\NIC-Drive-FW.csv
+
+     }
+
+}
